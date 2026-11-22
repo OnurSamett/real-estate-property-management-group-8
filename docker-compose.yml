@@ -1,0 +1,40 @@
+services:
+  db:
+    image: postgres:16-alpine
+    container_name: real_estate_db
+    restart: always
+    environment:
+      POSTGRES_DB: realestate_db
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: ${DB_PASSWORD:-adminpassword123}
+    ports:
+      # Only reachable from the machine itself (DBeaver / psql), never from the internet.
+      - "127.0.0.1:5432:5432"
+    volumes:
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql:ro
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d realestate_db"]
+      interval: 3s
+      timeout: 3s
+      retries: 20
+
+  web:
+    build: .
+    container_name: real_estate_web
+    restart: always
+    ports:
+      # Local default 8080; on the cloud server run with APP_PORT=80.
+      - "${APP_PORT:-8080}:5000"
+    environment:
+      DB_HOST: db
+      DB_NAME: realestate_db
+      DB_USER: postgres
+      DB_PASSWORD: ${DB_PASSWORD:-adminpassword123}
+      SECRET_KEY: ${SECRET_KEY:-cmpe341_change_me_in_production}
+    depends_on:
+      db:
+        condition: service_healthy
+
+volumes:
+  pgdata:

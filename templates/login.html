@@ -1,0 +1,43 @@
+{% extends 'base.html' %}
+{% block title %}Sign in{% endblock %}
+{% block content %}
+<style>
+    .auth { min-height: 100vh; display: grid; place-items: center; padding: 2rem 1rem; }
+    .auth-card { width: 100%; max-width: 380px; }
+    .auth-brand { display: flex; align-items: center; gap: .6rem; justify-content: center; margin-bottom: 1.75rem; }
+    .auth-panel { padding: 1.75rem; }
+    .auth h1 { font-size: 1.2rem; font-weight: 600; letter-spacing: -.01em; margin: 0 0 .25rem; text-align: center; }
+    .auth .sub { color: var(--muted); text-align: center; margin-bottom: 1.5rem; }
+    .demo { margin-top: 1rem; font-size: .8rem; color: var(--muted); text-align: center; line-height: 1.7; }
+    main > .flash { position: fixed; top: 1rem; left: 50%; transform: translateX(-50%); min-width: 340px; z-index: 5; }
+    .foot { margin-top: 2rem; text-align: center; font-size: .75rem; color: #9aa0a6; }
+</style>
+<div class="auth">
+    <div class="auth-card">
+        <div class="auth-brand">
+            <span class="brand-mark"><i class="bi bi-house-door"></i></span>
+            <span class="brand-name">Estate Manager</span>
+        </div>
+        <div class="panel auth-panel">
+            <h1>Sign in to your account</h1>
+            <p class="sub">Manage properties, owners and agents.</p>
+            <form method="POST">
+                <div class="mb-3">
+                    <label class="form-label">Username</label>
+                    <input type="text" name="username" class="form-control" required autofocus>
+                </div>
+                <div class="mb-4">
+                    <label class="form-label">Password</label>
+                    <input type="password" name="password" class="form-control" required>
+                </div>
+                <button type="submit" class="btn btn-accent w-100">Sign in</button>
+            </form>
+        </div>
+        <div class="demo">
+            Demo accounts: <code>admin</code> / <code>admin123</code> (full access)<br>
+            <code>agent1</code> / <code>agent123</code> (insert &amp; update)
+        </div>
+        <div class="foot">CMPE341 · Real Estate Property Management System</div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,106 @@
+{% extends 'base.html' %}
+{% block title %}{{ action }} Property{% endblock %}
+{% macro val(form_key, prop_key) -%}
+    {%- if form -%}{{ form.get(form_key, '') }}
+    {%- elif property -%}{{ property[prop_key] }}
+    {%- endif -%}
+{%- endmacro %}
+{% block content %}
+<style>
+    .form-wrap { max-width: 720px; }
+    .crumb { color: var(--muted); text-decoration: none; font-size: .82rem; }
+    .crumb:hover { color: var(--ink); }
+    .fsec { display: grid; grid-template-columns: 200px 1fr; gap: 1.5rem; padding: 1.4rem 1.5rem; }
+    .fsec + .fsec { border-top: 1px solid var(--line); }
+    .fsec h2 { font-size: .875rem; font-weight: 600; margin: 0 0 .25rem; }
+    .fsec p { font-size: .8rem; color: var(--muted); margin: 0; }
+    .factions { display: flex; justify-content: flex-end; gap: .5rem; padding: 1rem 1.5rem; border-top: 1px solid var(--line); background: #fafaf9; border-radius: 0 0 10px 10px; }
+    @media (max-width: 768px) { .fsec { grid-template-columns: 1fr; gap: .75rem; } }
+</style>
+<div class="form-wrap">
+    <a href="/dashboard" class="crumb"><i class="bi bi-chevron-left"></i> Properties</a>
+    <h1 class="page-title mt-2">{{ 'Add property' if action == 'Add' else 'Edit property #' ~ property.property_id }}</h1>
+    <p class="page-sub mb-4">{{ 'Creates a new row in the Property table (INSERT).' if action == 'Add' else 'Saves changes to this row of the Property table (UPDATE).' }}</p>
+
+    <form method="POST" class="panel">
+        <div class="fsec">
+            <div><h2>Listing</h2><p>Type and current availability.</p></div>
+            <div class="row g-3">
+                <div class="col-sm-6">
+                    <label class="form-label">Property type</label>
+                    <select name="property_type" class="form-select" required>
+                        {% for t in property_types %}
+                            <option value="{{ t }}" {% if val('property_type', 'property_type') == t %}selected{% endif %}>{{ t }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="col-sm-6">
+                    <label class="form-label">Status</label>
+                    <select name="status" class="form-select" required>
+                        {% for s in statuses %}
+                            <option value="{{ s }}" {% if val('status', 'status') == s %}selected{% endif %}>{{ s }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+            </div>
+        </div>
+        <div class="fsec">
+            <div><h2>Location</h2><p>Street address, city and postal code.</p></div>
+            <div class="row g-3">
+                <div class="col-12">
+                    <label class="form-label">Street address</label>
+                    <input type="text" name="address" maxlength="200" class="form-control" value="{{ val('address', 'property_address') }}" required>
+                </div>
+                <div class="col-sm-7">
+                    <label class="form-label">City</label>
+                    <input type="text" name="city" maxlength="60" class="form-control" value="{{ val('city', 'city') }}" required>
+                </div>
+                <div class="col-sm-5">
+                    <label class="form-label">Postal code</label>
+                    <input type="text" name="postal_code" maxlength="15" class="form-control" value="{{ val('postal_code', 'postal_code') }}" required>
+                </div>
+            </div>
+        </div>
+        <div class="fsec">
+            <div><h2>Pricing</h2><p>Asking prices in Turkish lira. Leave empty for 0.</p></div>
+            <div class="row g-3">
+                <div class="col-sm-6">
+                    <label class="form-label">Monthly rent</label>
+                    <div class="input-group"><span class="input-group-text">₺</span>
+                        <input type="number" step="0.01" min="0" name="rent_amount" class="form-control" value="{{ val('rent_amount', 'rent_amount') }}" placeholder="0"></div>
+                </div>
+                <div class="col-sm-6">
+                    <label class="form-label">Sale price</label>
+                    <div class="input-group"><span class="input-group-text">₺</span>
+                        <input type="number" step="0.01" min="0" name="sale_amount" class="form-control" value="{{ val('sale_amount', 'sale_amount') }}" placeholder="0"></div>
+                </div>
+            </div>
+        </div>
+        <div class="fsec">
+            <div><h2>Assignment</h2><p>Registered owner and managing agent.</p></div>
+            <div class="row g-3">
+                <div class="col-sm-6">
+                    <label class="form-label">Owner</label>
+                    <select name="o_id" class="form-select" required>
+                        {% for o in owners %}
+                            <option value="{{ o.o_id }}" {% if val('o_id', 'o_id')|string == o.o_id|string %}selected{% endif %}>{{ o.name }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="col-sm-6">
+                    <label class="form-label">Managing agent</label>
+                    <select name="agent_id" class="form-select" required>
+                        {% for a in agents %}
+                            <option value="{{ a.agent_id }}" {% if val('agent_id', 'agent_id')|string == a.agent_id|string %}selected{% endif %}>{{ a.name }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+            </div>
+        </div>
+        <div class="factions">
+            <a href="/dashboard" class="btn btn-quiet">Cancel</a>
+            <button type="submit" class="btn btn-accent">Save property</button>
+        </div>
+    </form>
+</div>
+{% endblock %}
