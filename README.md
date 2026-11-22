@@ -4,6 +4,8 @@ A Python Flask web application on a PostgreSQL 16 database for managing properti
 owners, agents, tenants, lease/sale agreements and payments. The whole system runs with
 Docker Compose.
 
+**Live:** https://cmpe341.nolienlabs.com (also http://92.5.18.168) — Oracle Cloud Always Free Ubuntu VM.
+
 ## Run It (single command)
 
 Requirements: Docker with Docker Compose.
