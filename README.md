@@ -48,8 +48,15 @@ Passwords are stored as bcrypt hashes in the `Users` table; plain-text passwords
 `Owner`, `Agent`, `Tenant`, `Property`, `Lease_agreement`, `Payment`, `Owner_contact`,
 `Agent_contact`, `Tenant_contact`, plus the `Users` table for application logins.
 
-PostgreSQL is published only on `127.0.0.1:5432` (user `postgres`, database `realestate_db`),
-so it can be opened with DBeaver on the same machine but is not reachable from the internet.
+The database port is not published, so the database is not reachable from outside Docker and
+`docker compose up` works even if PostgreSQL is already running on the computer. To open the
+database with DBeaver, start the stack with the optional DBeaver file instead:
+
+```bash
+docker compose -f docker-compose.yml -f docker-compose.dbeaver.yml up
+```
+
+and connect to `localhost:5433`, database `realestate_db`, user `postgres`, password `adminpassword123`.
 
 ## Deployment (Linux cloud server)
 
@@ -93,6 +100,7 @@ templates/           HTML pages (Bootstrap 5)
 init.sql             Schema, constraints, sample data and report queries
 Dockerfile           Web app image
 docker-compose.yml   Database + web app
-docker-compose.https.yml  Optional Caddy HTTPS proxy for a domain
+docker-compose.https.yml   Optional Caddy HTTPS proxy for a domain
+docker-compose.dbeaver.yml Optional: publish the database on 127.0.0.1:5433 for DBeaver
 deploy/              Server setup script and Caddyfile
 ```
