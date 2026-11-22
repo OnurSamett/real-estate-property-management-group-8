@@ -8,6 +8,12 @@ cd "$(dirname "$0")/.."
 
 if [ "$(id -u)" -ne 0 ]; then echo "Run with sudo: sudo bash deploy/setup-server.sh"; exit 1; fi
 
+echo "==> Adding 2 GB swap on small (1 GB RAM) free-tier machines"
+if [ "$(free -m | awk '/^Mem:/{print $2}')" -lt 2000 ] && ! swapon --show | grep -q .; then
+  fallocate -l 2G /swapfile && chmod 600 /swapfile && mkswap /swapfile && swapon /swapfile
+  grep -q '^/swapfile' /etc/fstab || echo '/swapfile none swap sw 0 0' >> /etc/fstab
+fi
+
 echo "==> Installing Docker and Docker Compose"
 apt-get update -y
 apt-get install -y docker.io docker-compose-v2 git

@@ -62,7 +62,7 @@ sudo bash deploy/setup-server.sh
 
 The script installs Docker, opens port 80 in the server firewall and starts the app with
 `APP_PORT=80`, so it opens at `http://<SERVER_IP>`. Port 80 (HTTP) must also be allowed in the
-cloud provider's network rules (security group / network security group).
+cloud provider's network rules (AWS security group, Azure network security group).
 
 ### With a domain and HTTPS
 
