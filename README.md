@@ -62,7 +62,20 @@ sudo bash deploy/setup-server.sh
 
 The script installs Docker, opens port 80 in the server firewall and starts the app with
 `APP_PORT=80`, so it opens at `http://<SERVER_IP>`. Port 80 (HTTP) must also be allowed in the
-cloud provider's network rules (security group / security list).
+cloud provider's network rules (security group / network security group).
+
+### With a domain and HTTPS
+
+1. Add a DNS `A` record that points the domain (e.g. `cmpe341.example.com`) to the server IP.
+2. Allow ports 80 and 443 in the cloud provider's network rules.
+3. Run the script with the domain:
+
+```bash
+sudo DOMAIN=cmpe341.example.com bash deploy/setup-server.sh
+```
+
+A Caddy reverse proxy (`docker-compose.https.yml`, `deploy/Caddyfile`) then serves
+`https://<DOMAIN>` with a free Let's Encrypt certificate, and `http://<SERVER_IP>` keeps working.
 
 Optional environment variables (put them in a `.env` file next to `docker-compose.yml`):
 
@@ -80,5 +93,6 @@ templates/           HTML pages (Bootstrap 5)
 init.sql             Schema, constraints, sample data and report queries
 Dockerfile           Web app image
 docker-compose.yml   Database + web app
-deploy/              Server setup script
+docker-compose.https.yml  Optional Caddy HTTPS proxy for a domain
+deploy/              Server setup script and Caddyfile
 ```

@@ -1,0 +1,9 @@
+# Domain: automatic HTTPS certificate from Let's Encrypt.
+{$DOMAIN} {
+	reverse_proxy web:5000
+}
+
+# Plain IP address (http://<SERVER_IP>) keeps working as well.
+:80 {
+	reverse_proxy web:5000
+}
